@@ -15,7 +15,8 @@ const _schema = i.schema({
 			url: i.any()
 		}),
 		homerooms: i.entity({
-			name: i.string()
+			name: i.string(),
+			grade: i.string()
 		}),
 		teachers: i.entity({
 			name: i.string()
@@ -32,6 +33,9 @@ const _schema = i.schema({
 		}),
 		grades: i.entity({
 			points: i.number()
+		}),
+		classGrades: i.entity({
+			name: i.string().unique().indexed()
 		})
 	},
 	links: {

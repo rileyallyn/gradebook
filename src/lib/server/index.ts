@@ -1,5 +1,5 @@
 import { INSTANT_APP_ADMIN_TOKEN, INSTANT_APP_ID } from '$env/static/private';
-import { init } from '@instantdb/admin';
+import { id, init, tx } from '@instantdb/admin';
 import schema from '../../../instant.schema';
 
 const db = init({
@@ -10,18 +10,22 @@ const db = init({
 
 export const api = {
 	getHomerooms: async () =>
-		db.query({
+		await db.query({
 			homerooms: {
 				teachers: {},
 				students: {}
-			}
+			},
+			classGrades: {}
 		}),
+	addHomeroom: async (homeroomName: string, grade: string) =>
+		await db.transact([db.tx.homerooms[id()].update({ name: homeroomName, grade })]),
+	getClassGrades: async () => await db.query({ classGrades: {} }),
 	getTeachers: async () =>
-		db.query({
+		await db.query({
 			teachers: {}
 		}),
 	getStudents: async () =>
-		db.query({
+		await db.query({
 			students: {
 				homeroom: {},
 				teachers: {},
@@ -37,13 +41,13 @@ export const api = {
 			}
 		}),
 	getClasses: async () =>
-		db.query({
+		await db.query({
 			classes: {
 				assignemnts: {}
 			}
 		}),
 	getAssignments: async () =>
-		db.query({
+		await db.query({
 			assignments: {
 				grades: {},
 				students: {
