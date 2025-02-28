@@ -29,13 +29,15 @@ const _schema = i.schema({
 		}),
 		assignments: i.entity({
 			name: i.string(),
+			description: i.string().optional(),
 			max_points: i.number()
 		}),
 		grades: i.entity({
 			points: i.number()
 		}),
-		classGrades: i.entity({
-			name: i.string().unique().indexed()
+		classGradeOptions: i.entity({
+			value: i.string().indexed(),
+			name: i.string()
 		})
 	},
 	links: {

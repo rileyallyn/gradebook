@@ -1,14 +1,9 @@
 <script lang="ts">
 	import '../app.css';
 	let { children } = $props();
-
-	let isMoreMenuOpen = $state(false);
-	const toggleMoreMenu = () => {
-		isMoreMenuOpen = !isMoreMenuOpen;
-	};
 </script>
 
-<header class="px-3 pt-3 pb-1">
+<header class="font-poppins px-3 pt-3 pb-1">
 	<nav>
 		<div class="flex items-center justify-between">
 			<div>Gradebook</div>
@@ -71,6 +66,6 @@
 	</nav>
 </header>
 
-<main class="px-3 pt-1">
+<main class="font-poppins px-3 pt-1">
 	{@render children()}
 </main>
