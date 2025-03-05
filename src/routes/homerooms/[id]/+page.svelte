@@ -5,6 +5,10 @@
 	const homeroom = data.homerooms[0];
 </script>
 
+<svelte:head>
+	<title>Homeroom Details</title>
+</svelte:head>
+
 <nav class="breadcrumbs mb-4 text-sm" aria-label="Breadcrumb">
 	<ul>
 		<li>
@@ -18,9 +22,26 @@
 </nav>
 <div class="flex flex-col gap-2">
 	<h1 class="mb-3 text-3xl">{homeroom.name}</h1>
-	<span>{homeroom.teachers.map((teacher) => teacher.name).join(', ')}</span>
-	<div class="overflow-x-auto">
+	<dl class="grid grid-cols-3">
+		<dt class="col-span-1">Teacher(s):</dt>
+		<dd class="col-span-2">
+			{#if homeroom.teachers.length > 0}
+				<span>
+					{#each homeroom.teachers as teacher, index}
+						<a href={`/teachers/${teacher.id}`}>{teacher.name}</a>{index <
+						homeroom.teachers.length - 1
+							? ', '
+							: ''}
+					{/each}
+				</span>
+			{/if}
+		</dd>
+		<dt class="col-span-1">Students</dt>
+		<dd class="col-span-2">{homeroom.students.length}</dd>
+	</dl>
+	{#if homeroom.students.length > 0}
 		<table class="table">
+			<caption>Students in homeroom</caption>
 			<thead>
 				<tr>
 					<th>Name</th>
@@ -54,5 +75,5 @@
 				{/each}
 			</tbody>
 		</table>
-	</div>
+	{/if}
 </div>

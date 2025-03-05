@@ -23,7 +23,6 @@
 
 <svelte:head>
 	<title>Homerooms</title>
-	<meta name="description" content="A list of all the homerooms." />
 </svelte:head>
 
 <div class="flex flex-col gap-3">
@@ -32,7 +31,7 @@
 			<li>
 				<a href="/">Home</a>
 			</li>
-			<li class="font-semibold">Homerooms List</li>
+			<li class="font-semibold">Homerooms</li>
 		</ul>
 	</div>
 	<div class="flex justify-end">
@@ -143,7 +142,7 @@
 							<a
 								href={`/homerooms/${homeroom.id}`}
 								title="View Homeroom"
-								class="btn btn-square hover:btn-secondary focus:hover:btn-secondary"
+								class="btn btn-square hover:btn-secondary focus:hover:btn-secondary active:btn-secondary focus-within:btn-secondary"
 							>
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
@@ -171,25 +170,43 @@
 		<ul class="list">
 			{#each homerooms as homeroom}
 				<li class="list-row rounded-box flex w-full items-center gap-2 tracking-wide shadow">
-					<a href={`/homerooms/${homeroom.id}`} title="View Homeroom" class="w-full">
-						<div class="flex w-full grow justify-between gap-2">
-							<div>
-								<p class="font-semibold">{getHomeroomGrade(homeroom.grade)}</p>
-								<p>{homeroom.name}</p>
-							</div>
-							<div class="flex justify-end">
-								<p class="text-sm font-semibold uppercase">Teacher(s)</p>
-								<span>
-									<ul>
-										{#each homeroom.teachers as teacher, index}
-											<li>
-												{`${teacher.name}${index < homeroom.teachers.length - 1 ? ', ' : ''}`}
-											</li>
-										{/each}
-									</ul>
-								</span>
-							</div>
+					<div class="flex w-full grow justify-between gap-2">
+						<div>
+							<p class="font-semibold">{getHomeroomGrade(homeroom.grade)}</p>
+							<p>{homeroom.name}</p>
 						</div>
+						<div>
+							<p class="text-sm font-semibold uppercase">Teacher(s)</p>
+							<span>
+								<ul>
+									{#each homeroom.teachers as teacher, index}
+										<li>
+											{`${teacher.name}${index < homeroom.teachers.length - 1 ? ', ' : ''}`}
+										</li>
+									{/each}
+								</ul>
+							</span>
+						</div>
+					</div>
+					<a
+						href={`/homerooms/${homeroom.id}`}
+						title="View Homeroom"
+						class="btn btn-square hover:btn-secondary focus:hover:btn-secondary active:btn-secondary focus-within:btn-secondary"
+					>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke-width="1.5"
+							stroke="currentColor"
+							class="size-6"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"
+							/>
+						</svg>
 						<span class="sr-only">Press to view homeroom</span>
 					</a>
 				</li>

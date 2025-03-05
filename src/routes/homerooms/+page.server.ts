@@ -10,7 +10,6 @@ export const actions: Actions = {
 		const grade = data.get('grade') as string;
 		const teachers = data.getAll('teachers') as string[];
 
-		console.log(name, grade, teachers);
 		return await api.addHomeroom({ name, grade }, { teachers });
 	}
 };

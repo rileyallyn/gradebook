@@ -9,8 +9,9 @@ export const actions: Actions = {
 		const data = await request.formData();
 		const name = data.get('name') as string;
 		const grade = data.get('grade') as string;
+		const teachers = data.getAll('teachers') as string[];
 
-		return await api.editHomeroom(params.id, { name, grade });
+		return await api.editHomeroom(params.id, { name, grade }, { teachers });
 	},
 	delete: async ({ params }) => {
 		await api.deleteHomeroom(params.id);
