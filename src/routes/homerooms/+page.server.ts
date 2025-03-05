@@ -1,7 +1,16 @@
 import { api } from '$lib/server';
-import { fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async () => {
-	return await api.getHomerooms();
+export const load: PageServerLoad = async () => await api.getHomerooms();
+
+export const actions: Actions = {
+	add: async ({ request }) => {
+		const data = await request.formData();
+		const name = data.get('name') as string;
+		const grade = data.get('grade') as string;
+		const teachers = data.getAll('teachers') as string[];
+
+		console.log(name, grade, teachers);
+		return await api.addHomeroom({ name, grade }, { teachers });
+	}
 };

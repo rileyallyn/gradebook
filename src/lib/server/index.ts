@@ -20,7 +20,9 @@ export const api = {
 				teachers: {},
 				students: {}
 			},
-			classGradeOptions: {}
+			classGradeOptions: {},
+			teachers: {},
+			students: {}
 		}),
 	getHomeroom: async (homeroomId: string) =>
 		await db.query({
@@ -32,16 +34,16 @@ export const api = {
 				},
 				teachers: {},
 				students: {}
-			}
+			},
+			teachers: {},
+			students: {}
 		}),
-	addHomeroom: async (
-		newHomeroom: NoIdEntity<'homerooms'>,
-		link: { classes?: string[]; students?: string[] }
-	) => await db.transact([db.tx.homerooms[id()].update(newHomeroom).link(link)]),
+	addHomeroom: async (newHomeroom: NoIdEntity<'homerooms'>, link: { teachers?: string[] }) =>
+		await db.transact([db.tx.homerooms[id()].update(newHomeroom).link(link)]),
 	editHomeroom: async (
 		homeroomId: string,
 		updatedHomeroom: NoIdEntity<'homerooms'>,
-		link: { classes?: string[]; students?: string[] }
+		link: { teachers?: string[] }
 	) => await db.transact([db.tx.homerooms[homeroomId].update(updatedHomeroom).link(link)]),
 	deleteHomeroom: async (homeroomId: string) =>
 		await db.transact([db.tx.homerooms[homeroomId].delete()]),
