@@ -49,10 +49,6 @@ const _schema = i.schema({
 			forward: { on: 'students', has: 'one', label: 'homeroom' },
 			reverse: { on: 'homerooms', has: 'many', label: 'students' }
 		},
-		studentTeacher: {
-			forward: { on: 'students', has: 'many', label: 'teachers' },
-			reverse: { on: 'teachers', has: 'many', label: 'students' }
-		},
 		teacherClass: {
 			forward: { on: 'teachers', has: 'many', label: 'classes' },
 			reverse: { on: 'classes', has: 'many', label: 'teachers' }
@@ -67,15 +63,15 @@ const _schema = i.schema({
 		},
 		studentGrade: {
 			forward: { on: 'students', has: 'many', label: 'grades' },
-			reverse: { on: 'grades', has: 'one', label: 'student' }
+			reverse: { on: 'grades', has: 'one', label: 'student', onDelete: 'cascade' }
 		},
 		classAssignemt: {
 			forward: { on: 'classes', has: 'many', label: 'assignemnts' },
-			reverse: { on: 'assignments', has: 'one', label: 'class' }
+			reverse: { on: 'assignments', has: 'one', label: 'class', onDelete: 'cascade' }
 		},
 		assignemntGrade: {
 			forward: { on: 'assignments', has: 'many', label: 'grades' },
-			reverse: { on: 'grades', has: 'one', label: 'assignment' }
+			reverse: { on: 'grades', has: 'one', label: 'assignment', onDelete: 'cascade' }
 		}
 	}
 });
