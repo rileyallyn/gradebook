@@ -12,16 +12,10 @@
 					<a href="/homerooms">Homerooms</a>
 				</li>
 				<li>
-					<a href="/teachers">Teachers</a>
+					<a href="/students">Students</a>
 				</li>
 				<li>
 					<a href="/classes">Classes</a>
-				</li>
-				<li>
-					<a href="/assignments">Assignments</a>
-				</li>
-				<li>
-					<a href="/grades">Grades</a>
 				</li>
 				<li>
 					<div class="dropdown dropdown-end">
@@ -29,7 +23,7 @@
 							aria-haspopup="menu"
 							aria-controls="more-menu"
 							role="button"
-							class="btn"
+							class="btn btn-square"
 							tabindex="0"
 						>
 							<svg
@@ -43,7 +37,7 @@
 								<path
 									stroke-linecap="round"
 									stroke-linejoin="round"
-									d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
+									d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
 								/>
 							</svg>
 							<span class="sr-only">More actions</span>
@@ -53,10 +47,16 @@
 							class="dropdown-content menu bg-base-100 rounded-box border-base-200 flex w-40 flex-col gap-1 border shadow-md"
 						>
 							<li>
-								<a href="/print">Print</a>
+								<a href="/assignments">Assibnments</a>
 							</li>
 							<li>
-								<a href="/print">Something else</a>
+								<a href="/teachers">Teachers</a>
+							</li>
+							<li>
+								<a href="/grades">Grades</a>
+							</li>
+							<li>
+								<a href="/print">Print</a>
 							</li>
 						</ul>
 					</div>
