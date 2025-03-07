@@ -25,7 +25,8 @@ const _schema = i.schema({
 			name: i.string()
 		}),
 		classes: i.entity({
-			name: i.string()
+			name: i.string(),
+			description: i.string().optional()
 		}),
 		assignments: i.entity({
 			name: i.string(),
@@ -69,7 +70,7 @@ const _schema = i.schema({
 			forward: { on: 'classes', has: 'many', label: 'assignemnts' },
 			reverse: { on: 'assignments', has: 'one', label: 'class', onDelete: 'cascade' }
 		},
-		assignemntGrade: {
+		assignmentGrade: {
 			forward: { on: 'assignments', has: 'many', label: 'grades' },
 			reverse: { on: 'grades', has: 'one', label: 'assignment', onDelete: 'cascade' }
 		}
