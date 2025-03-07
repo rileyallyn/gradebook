@@ -3,6 +3,7 @@
 	import { page } from '$app/state';
 	import { get } from 'svelte/store';
 	import { enhance } from '$app/forms';
+	import Column from './column.svelte';
 
 	const { data }: PageProps = $props();
 	const sort = page.url.searchParams.get('sort') ?? 'grade';
@@ -115,11 +116,11 @@
 		<table class="table-pin-cols table">
 			<thead>
 				<tr>
-					<th>Grade</th>
-					<th>Name</th>
-					<th>Teacher(s)</th>
-					<th>Students</th>
-					<th>Actions</th>
+					<Column title="Grade" {sortBy} {sortDirection} key="grade" />
+					<Column title="Name" {sortBy} {sortDirection} key="name" />
+					<Column title="Teachers" {sortBy} {sortDirection} key="teachers" />
+					<Column title="Students" {sortBy} {sortDirection} key="students" className="text-right" />
+					<Column title="Actions" key="actions" />
 				</tr>
 			</thead>
 			<tbody>
@@ -130,15 +131,13 @@
 						<td>
 							<div class="flex">
 								{#each homeroom.teachers as teacher, index}
-									<a href={`/teachers/${teacher.id}`}>{teacher.name}</a>{index <
-									homeroom.teachers.length - 1
-										? ', '
-										: ''}
+									<a href={`/teachers/${teacher.id}`} class="link link-primary">{teacher.name}</a
+									>{index < homeroom.teachers.length - 1 ? ', ' : ''}
 								{/each}
 							</div>
 						</td>
 						<td>{homeroom.students.length}</td>
-						<td>
+						<td class="text-right">
 							<a
 								href={`/homerooms/${homeroom.id}`}
 								title="View Homeroom"
