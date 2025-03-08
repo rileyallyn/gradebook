@@ -31,10 +31,12 @@ const _schema = i.schema({
 		assignments: i.entity({
 			name: i.string(),
 			description: i.string().optional(),
+			standard: i.string().optional(),
 			max_points: i.number()
 		}),
 		grades: i.entity({
-			points: i.number()
+			standard_score: i.json<number[]>().optional(),
+			score: i.number().optional()
 		}),
 		classGradeOptions: i.entity({
 			value: i.string().indexed(),
