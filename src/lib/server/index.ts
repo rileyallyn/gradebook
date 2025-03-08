@@ -47,6 +47,8 @@ export const api = {
 	) => await db.transact([db.tx.homerooms[homeroomId].update(updatedHomeroom).link(link)]),
 	deleteHomeroom: async (homeroomId: string) =>
 		await db.transact([db.tx.homerooms[homeroomId].delete()]),
+	deleteHomerooms: async (homeroomIds: string[]) =>
+		await db.transact(homeroomIds.map((homeroomId) => db.tx.homerooms[homeroomId].delete())),
 	getTeachers: async () =>
 		await db.query({
 			teachers: {
@@ -69,6 +71,8 @@ export const api = {
 	) => await db.transact([db.tx.teachers[teacherId].update(updatedTeacher).link(link)]),
 	deleteTeacher: async (homeroomId: string) =>
 		await db.transact([db.tx.teachers[homeroomId].delete()]),
+	deleteTeachers: async (teacherIds: string[]) =>
+		await db.transact(teacherIds.map((teacherId) => db.tx.teachers[teacherId].delete())),
 	getStudents: async () =>
 		await db.query({
 			students: {
@@ -117,6 +121,8 @@ export const api = {
 	) => await db.transact([db.tx.students[studentId].update(updatedStudent).link(link)]),
 	deleteStudent: async (studentId: string) =>
 		await db.transact([db.tx.students[studentId].delete()]),
+	deleteStudents: async (studentIds: string[]) =>
+		await db.transact(studentIds.map((studentId) => db.tx.students[studentId].delete())),
 	getClasses: async () =>
 		await db.query({
 			classes: {
@@ -147,6 +153,8 @@ export const api = {
 		unlink: { assignments?: string[]; students?: string[] }
 	) => await db.transact([db.tx.classes[classId].update(updatedClass).link(link).unlink(unlink)]),
 	deleteClass: async (classId: string) => await db.transact([db.tx.classes[classId].delete()]),
+	deleteClasses: async (classIds: string[]) =>
+		await db.transact(classIds.map((classId) => db.tx.classes[classId].delete())),
 	getAssignments: async () =>
 		await db.query({
 			assignments: {
@@ -191,6 +199,10 @@ export const api = {
 		]),
 	deleleAssignment: async (assignmentId: string) =>
 		await db.transact([db.tx.assignments[assignmentId].delete()]),
+	deleteAssignments: async (assignmentIds: string[]) =>
+		await db.transact(
+			assignmentIds.map((assignmentId) => db.tx.assignments[assignmentId].delete())
+		),
 	getGrades: async () =>
 		await db.query({
 			grades: {
@@ -228,6 +240,8 @@ export const api = {
 		link: { student?: string; assignment?: string },
 		unlink: { student?: string; assignment?: string }
 	) => await db.transact([db.tx.grades[gradeId].update(newGrade).link(link).unlink(unlink)]),
-	deleleGrades: async (gradeId: string) => await db.transact([db.tx.grades[gradeId].delete()]),
+	deleleGrade: async (gradeId: string) => await db.transact([db.tx.grades[gradeId].delete()]),
+	deleteGrades: async (gradeIds: string[]) =>
+		await db.transact(gradeIds.map((grade) => db.tx.grades[grade].delete())),
 	getClassGradeOptions: async () => await db.query({ classGradeOptions: {} })
 };
