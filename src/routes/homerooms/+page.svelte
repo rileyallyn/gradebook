@@ -233,4 +233,11 @@
 	details > summary::-webkit-details-marker {
 		display: none;
 	}
+	dl > dt,
+	dd {
+		display: inline;
+	}
+	dl > dt::after {
+		content: ':';
+	}
 </style>
