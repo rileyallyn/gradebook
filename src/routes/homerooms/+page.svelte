@@ -3,24 +3,20 @@
 	import { page } from '$app/state';
 	import { get } from 'svelte/store';
 	import { enhance } from '$app/forms';
-	import Column from './column.svelte';
 
 	const { data }: PageProps = $props();
-	const sort = page.url.searchParams.get('sort') ?? 'grade';
-	const sortBy = $state(sort);
-	let teachersValue = $state('');
-	const teachers = data.teachers.sort((a, b) => a.name.localeCompare(b.name));
-	const sortDirection: 'ascending' | 'descending' = $state('ascending');
-	let homerooms = [...data.homerooms].sort(
-		(a, b) =>
-			(sortBy === 'grade'
-				? a.grade.localeCompare(b.grade) || a.name.localeCompare(b.name)
-				: a.name.localeCompare(b.name) || a.grade.localeCompare(b.grade)) *
-			(sortDirection === 'ascending' ? 1 : -1)
-	);
 	const getHomeroomGrade = (grade: string) =>
 		data.classGradeOptions.find((option) => option.value === grade)?.name ?? '-';
 </script>
+
+{#snippet columnHeader(title: string, className?: string, srOnlyText?: string)}
+	<th scope="col" class={className}>
+		<span>{title}</span>
+		{#if srOnlyText}
+			<span class="sr-only">{srOnlyText}</span>
+		{/if}
+	</th>
+{/snippet}
 
 <svelte:head>
 	<title>Homerooms</title>
@@ -80,7 +76,7 @@
 						</summary>
 						<div class="collapse-content">
 							<ul>
-								{#each teachers as teacher}
+								{#each data.teachers as teacher}
 									<li>
 										<label class="label">
 											<input type="checkbox" class="checkbox" name="teachers" value={teacher.id} />
@@ -116,15 +112,15 @@
 		<table class="table-pin-cols table">
 			<thead>
 				<tr>
-					<Column title="Grade" {sortBy} {sortDirection} key="grade" />
-					<Column title="Name" {sortBy} {sortDirection} key="name" />
-					<Column title="Teachers" {sortBy} {sortDirection} key="teachers" />
-					<Column title="Students" {sortBy} {sortDirection} key="students" className="text-right" />
-					<Column title="Actions" key="actions" />
+					{@render columnHeader('Grade')}
+					{@render columnHeader('Name')}
+					{@render columnHeader('Teachers')}
+					{@render columnHeader('Students', 'text-right')}
+					{@render columnHeader('', 'text-right', 'Links')}
 				</tr>
 			</thead>
 			<tbody>
-				{#each homerooms as homeroom}
+				{#each data.homerooms as homeroom}
 					<tr>
 						<th>{getHomeroomGrade(homeroom.grade)}</th>
 						<td>{homeroom.name}</td>
@@ -136,11 +132,11 @@
 								{/each}
 							</div>
 						</td>
-						<td>{homeroom.students.length}</td>
+						<td class="text-right">{homeroom.students.length}</td>
 						<td class="text-right">
 							<a
 								href={`/homerooms/${homeroom.id}`}
-								title="View Homeroom"
+								title="Go To Homeroom"
 								class="btn btn-square hover:btn-secondary focus:hover:btn-secondary active:btn-secondary focus-within:btn-secondary"
 							>
 								<svg
@@ -154,20 +150,20 @@
 									<path
 										stroke-linecap="round"
 										stroke-linejoin="round"
-										d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"
+										d="m12.75 15 3-3m0 0-3-3m3 3h-7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
 									/>
 								</svg>
-								<span class="sr-only">View Homeroom</span>
+								<span class="sr-only">Go to homeroom</span>
 							</a>
-						</td></tr
-					>
+						</td>
+					</tr>
 				{/each}
 			</tbody>
 		</table>
 	</div>
 	<div class="md:hidden">
 		<ul class="list">
-			{#each homerooms as homeroom}
+			{#each data.homerooms as homeroom}
 				<li class="list-row rounded-box flex w-full items-center gap-2 tracking-wide shadow">
 					<div class="flex w-full grow justify-between gap-2">
 						<div>
@@ -175,7 +171,23 @@
 							<p>{homeroom.name}</p>
 						</div>
 						<div>
-							<p class="text-sm font-semibold uppercase">Teacher(s)</p>
+							<dl>
+								<dt>Teacher(s)</dt>
+								<dd>
+									<ul>
+										{#each homeroom.teachers as teacher, index}
+											<li>
+												{`${teacher.name}${index < homeroom.teachers.length - 1 ? ', ' : ''}`}
+											</li>
+										{/each}
+									</ul>
+								</dd>
+								<dt>Student(s)</dt>
+								<dd>
+									{data.students.length}
+								</dd>
+							</dl>
+							<!-- <p class="text-sm font-semibold uppercase">Teacher(s)</p>
 							<span>
 								<ul>
 									{#each homeroom.teachers as teacher, index}
@@ -184,12 +196,12 @@
 										</li>
 									{/each}
 								</ul>
-							</span>
+							</span> -->
 						</div>
 					</div>
 					<a
 						href={`/homerooms/${homeroom.id}`}
-						title="View Homeroom"
+						title="Go To Homeroom"
 						class="btn btn-square hover:btn-secondary focus:hover:btn-secondary active:btn-secondary focus-within:btn-secondary"
 					>
 						<svg
@@ -203,10 +215,10 @@
 							<path
 								stroke-linecap="round"
 								stroke-linejoin="round"
-								d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"
+								d="m12.75 15 3-3m0 0-3-3m3 3h-7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
 							/>
 						</svg>
-						<span class="sr-only">Press to view homeroom</span>
+						<span class="sr-only">Press to go to homeroom</span>
 					</a>
 				</li>
 			{/each}
