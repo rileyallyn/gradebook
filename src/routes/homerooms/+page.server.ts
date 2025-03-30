@@ -11,5 +11,11 @@ export const actions: Actions = {
 		const teachers = data.getAll('teachers') as string[];
 
 		return await api.addHomeroom({ name, grade }, { teachers });
+	},
+	delete: async ({ request }) => {
+		const data = await request.formData();
+		const homeroomIds = data.getAll('homeroomId') as string[];
+
+		return await api.deleteHomerooms(homeroomIds);
 	}
 };

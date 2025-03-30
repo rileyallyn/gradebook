@@ -7,6 +7,25 @@
 	const { data }: PageProps = $props();
 	const getHomeroomGrade = (grade: string) =>
 		data.classGradeOptions.find((option) => option.value === grade)?.name ?? '-';
+	let selectedHomerooms = $state(new Set<string>());
+	let allHomeroomsSelected = $derived(selectedHomerooms.size === data.homerooms.length);
+
+	const toggleHomeroom = (homeroomId: string) => {
+		const newSelectedHomerooms = new Set(selectedHomerooms);
+		if (newSelectedHomerooms.has(homeroomId)) {
+			newSelectedHomerooms.delete(homeroomId);
+		} else {
+			newSelectedHomerooms.add(homeroomId);
+		}
+		selectedHomerooms = newSelectedHomerooms;
+	};
+
+	const toggleAllHomerooms = () => {
+		selectedHomerooms =
+			selectedHomerooms.size === data.homerooms.length
+				? new Set()
+				: new Set(data.homerooms.map((homeroom) => homeroom.id));
+	};
 </script>
 
 {#snippet columnHeader(title: string, className?: string, srOnlyText?: string)}
@@ -31,7 +50,7 @@
 			<li class="font-semibold">Homerooms</li>
 		</ul>
 	</div>
-	<div class="flex justify-end">
+	<div class="float-end">
 		<button
 			class="btn btn-secondary"
 			popovertarget="new-homeroom-form"
@@ -107,11 +126,37 @@
 				</div>
 			</form>
 		</div>
+		<div class="join">
+			<button class="btn join-item md:hidden" onclick={toggleAllHomerooms}>
+				{allHomeroomsSelected ? 'Unselect All' : 'Select All'}
+			</button>
+			<form class="join-item" method="post" action="?/delete">
+				{#each [...selectedHomerooms] as homeroom}
+					<input type="text" name="homeroomId" value={homeroom} hidden />
+				{/each}
+				<div class="indicator">
+					<span class="indicator-item badge badge-neutral">{selectedHomerooms.size}</span>
+					<button class="btn" type="submit" disabled={selectedHomerooms.size === 0}>
+						Delete Selected Homerooms
+					</button>
+				</div>
+			</form>
+		</div>
 	</div>
 	<div class="max-md:hidden">
 		<table class="table-pin-cols table">
 			<thead>
 				<tr>
+					<th class="w-10">
+						<input
+							title="Select All Homerooms"
+							type="checkbox"
+							class="checkbox"
+							checked={selectedHomerooms.size === data.homerooms.length}
+							onchange={toggleAllHomerooms}
+						/>
+						<span class="sr-only">Select All Homerooms</span>
+					</th>
 					{@render columnHeader('Grade')}
 					{@render columnHeader('Name')}
 					{@render columnHeader('Teachers')}
@@ -122,6 +167,16 @@
 			<tbody>
 				{#each data.homerooms as homeroom}
 					<tr>
+						<td>
+							<input
+								title="Select Homeroom"
+								type="checkbox"
+								class="checkbox"
+								checked={selectedHomerooms.has(homeroom.id)}
+								onchange={() => toggleHomeroom(homeroom.id)}
+							/>
+							<span class="sr-only">Select Homeroom</span>
+						</td>
 						<th>{getHomeroomGrade(homeroom.grade)}</th>
 						<td>{homeroom.name}</td>
 						<td>
@@ -137,7 +192,7 @@
 							<a
 								href={`/homerooms/${homeroom.id}`}
 								title="Go To Homeroom"
-								class="btn btn-square hover:btn-secondary focus:hover:btn-secondary active:btn-secondary focus-within:btn-secondary"
+								class="btn btn-square hover:btn-primary focus:hover:btn-primary active:btn-primary focus-within:btn-primary"
 							>
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
@@ -166,13 +221,25 @@
 			{#each data.homerooms as homeroom}
 				<li class="list-row rounded-box flex w-full items-center gap-2 tracking-wide shadow">
 					<div class="flex w-full grow justify-between gap-2">
-						<div>
-							<p class="font-semibold">{getHomeroomGrade(homeroom.grade)}</p>
-							<p>{homeroom.name}</p>
+						<div class="flex items-center gap-2">
+							<div>
+								<input
+									title="Select Homeroom"
+									type="checkbox"
+									class="checkbox"
+									checked={selectedHomerooms.has(homeroom.id)}
+									onchange={() => toggleHomeroom(homeroom.id)}
+								/>
+								<span class="sr-only">Select Homeroom</span>
+							</div>
+							<div>
+								<p class="font-semibold">{getHomeroomGrade(homeroom.grade)}</p>
+								<p>{homeroom.name}</p>
+							</div>
 						</div>
 						<div>
 							<dl>
-								<dt>Teacher(s)</dt>
+								<dt class="font-semibold uppercase">Teacher(s)</dt>
 								<dd>
 									<ul>
 										{#each homeroom.teachers as teacher, index}
@@ -182,27 +249,17 @@
 										{/each}
 									</ul>
 								</dd>
-								<dt>Student(s)</dt>
+								<dt class="font-semibold uppercase">Student(s)</dt>
 								<dd>
 									{data.students.length}
 								</dd>
 							</dl>
-							<!-- <p class="text-sm font-semibold uppercase">Teacher(s)</p>
-							<span>
-								<ul>
-									{#each homeroom.teachers as teacher, index}
-										<li>
-											{`${teacher.name}${index < homeroom.teachers.length - 1 ? ', ' : ''}`}
-										</li>
-									{/each}
-								</ul>
-							</span> -->
 						</div>
 					</div>
 					<a
 						href={`/homerooms/${homeroom.id}`}
 						title="Go To Homeroom"
-						class="btn btn-square hover:btn-secondary focus:hover:btn-secondary active:btn-secondary focus-within:btn-secondary"
+						class="btn btn-square hover:btn-primary focus:hover:btn-primary active:btn-primary focus-within:btn-primary"
 					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
@@ -238,6 +295,6 @@
 		display: inline;
 	}
 	dl > dt::after {
-		content: ':';
+		content: ': ';
 	}
 </style>
