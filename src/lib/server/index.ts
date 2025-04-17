@@ -43,8 +43,12 @@ export const api = {
 	editHomeroom: async (
 		homeroomId: string,
 		updatedHomeroom: NoIdEntity<'homerooms'>,
-		link: { teachers?: string[] }
-	) => await db.transact([db.tx.homerooms[homeroomId].update(updatedHomeroom).link(link)]),
+		link: { teachers?: string[] },
+		unlink: { teachers?: string[] }
+	) =>
+		await db.transact([
+			db.tx.homerooms[homeroomId].update(updatedHomeroom).link(link).unlink(unlink)
+		]),
 	deleteHomeroom: async (homeroomId: string) =>
 		await db.transact([db.tx.homerooms[homeroomId].delete()]),
 	deleteHomerooms: async (homeroomIds: string[]) =>
@@ -78,7 +82,7 @@ export const api = {
 			students: {
 				homeroom: {},
 				classes: {
-					assignemnts: {
+					assignments: {
 						grades: {}
 					}
 				},
