@@ -12,13 +12,13 @@ const _schema = i.schema({
 			email: i.string().unique().indexed()
 		}),
 		assignments: i.entity({
-			description: i.string(),
+			description: i.string().optional(),
 			max_points: i.number(),
 			name: i.string(),
-			standard: i.string()
+			standard: i.string().optional()
 		}),
 		classes: i.entity({
-			description: i.string(),
+			description: i.string().optional(),
 			name: i.string()
 		}),
 		classGradeOptions: i.entity({
