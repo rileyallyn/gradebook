@@ -27,7 +27,8 @@ const _schema = i.schema({
 		}),
 		grades: i.entity({
 			score: i.number(),
-			standard_score: i.any()
+			standard_score: i.json<string[]>().optional(),
+			comments: i.string().optional()
 		}),
 		homerooms: i.entity({
 			grade: i.string(),
