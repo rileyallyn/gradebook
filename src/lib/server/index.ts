@@ -1,14 +1,9 @@
 import { INSTANT_APP_ADMIN_TOKEN, INSTANT_APP_ID } from '$env/static/private';
 import { id, init, tx, type InstaQLEntity } from '@instantdb/admin';
-import schema, { type AppSchema } from '../../../instant.schema';
+import { type AppSchema } from '../../../instant.schema';
 import { updated } from '$app/state';
 import { assets } from '$app/paths';
-
-const db = init({
-	appId: INSTANT_APP_ID,
-	adminToken: INSTANT_APP_ADMIN_TOKEN,
-	schema
-});
+import { db } from './db';
 
 type Entity<T extends keyof AppSchema['entities']> = InstaQLEntity<AppSchema, T>;
 type NoIdEntity<T extends keyof AppSchema['entities']> = Omit<InstaQLEntity<AppSchema, T>, 'id'>;
