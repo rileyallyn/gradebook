@@ -55,9 +55,17 @@ export const api = {
 				homerooms: {}
 			}
 		}),
-	getTeacher: async () =>
+	getTeacher: async (teacherId: string) =>
 		await db.query({
-			teachers: {}
+			teachers: {
+				$: {
+					where: {
+						id: teacherId
+					}
+				},
+				classes: {},
+				homerooms: {}
+			}
 		}),
 	addTeacher: async (
 		newTeacher: NoIdEntity<'teachers'>,

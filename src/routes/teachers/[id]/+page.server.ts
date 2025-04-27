@@ -4,7 +4,7 @@ export const load = async ({ params }) => {
     if (!params.id) {
         throw error(404, 'Teacher not found');
     }
-    const { teachers } = await api.getTeachers();
+    const { teachers } = await api.getTeacher(params.id);
     if (teachers.length === 0) {
         throw error(404, 'Teacher not found');
     }
