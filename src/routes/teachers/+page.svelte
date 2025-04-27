@@ -4,30 +4,30 @@
 	import type { PageProps } from './$types';
 
 	const { data }: PageProps = $props();
-	let isAddingStudent = $state(false);
-	let selectedStudents = $state(new Set<string>());
-	let allStudentsSelected = $derived(selectedStudents.size === data.students.length);
+	let isAddingTeacher = $state(false);
+	let selectedTeachers = $state(new Set<string>());
+	let allTeachersSelected = $derived(selectedTeachers.size === data.teachers.length);
 
-	const toggleStudent = (studentId: string) => {
-		const newSelectedStudents = new Set(selectedStudents);
-		if (newSelectedStudents.has(studentId)) {
-			newSelectedStudents.delete(studentId);
+	const toggleTeacher = (teacherId: string) => {
+		const newSelectedTeachers = new Set(selectedTeachers);
+		if (newSelectedTeachers.has(teacherId)) {
+			newSelectedTeachers.delete(teacherId);
 		} else {
-			newSelectedStudents.add(studentId);
+			newSelectedTeachers.add(teacherId);
 		}
-		selectedStudents = newSelectedStudents;
+		selectedTeachers = newSelectedTeachers;
 	};
 
-	const toggleAllStudents = () => {
-		selectedStudents =
-			selectedStudents.size === data.students.length
+	const toggleAllTeachers = () => {
+		selectedTeachers =
+			selectedTeachers.size === data.teachers.length
 				? new Set()
-				: new Set(data.students.map((student) => student.id));
+				: new Set(data.teachers.map((teacher) => teacher.id));
 	};
 </script>
 
 <svelte:head>
-	<title>Students</title>
+	<title>Teachers</title>
 </svelte:head>
 
 <div class="flex flex-col gap-3">
@@ -36,14 +36,14 @@
 			<li>
 				<a href="/">Home</a>
 			</li>
-			<li class="font-semibold">Students</li>
+			<li class="font-semibold">Teachers</li>
 		</ul>
 	</div>
-	<div class=" flex flex-row gap-3">
+	<div class="flex flex-row gap-3">
 		<button
 			class="btn btn-secondary"
-			onclick={() => (isAddingStudent = true)}
-			popovertarget="add-student-form"
+			onclick={() => (isAddingTeacher = true)}
+			popovertarget="add-teacher-form"
 			popovertargetaction="toggle"
 		>
 			<svg
@@ -56,11 +56,11 @@
 			>
 				<path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
 			</svg>
-			<span>Add a student</span>
+			<span>Add a teacher</span>
 		</button>
-		{#if isAddingStudent}
+		{#if isAddingTeacher}
 			<div
-				id="add-student-form"
+				id="add-teacher-form"
 				popover="auto"
 				style="inset: unset;"
 				class="rounded-box border-neutral relative mt-11 border p-4 shadow"
@@ -70,7 +70,7 @@
 					class=""
 					action="?/add"
 					use:enhance={() => {
-						isAddingStudent = false;
+						isAddingTeacher = false;
 						return async ({ result }) => {
 							if (result.type === 'success') {
 								await invalidateAll();
@@ -83,14 +83,6 @@
 							<div>Name<span class="text-error">*</span></div>
 							<input type="text" name="name" placeholder="Name" class="input rounded-lg" required />
 						</label>
-						<label class="flex flex-col gap-2">
-							<div>Homeroom</div>
-							<select name="homeroom" class="select rounded-lg">
-								{#each data.homerooms as homeroom}
-									<option value={homeroom.id}>{homeroom.name}</option>
-								{/each}
-							</select>
-						</label>
 					</div>
 					<button type="submit" class="btn btn-primary mt-2">Add</button>
 				</form>
@@ -98,8 +90,8 @@
 		{/if}
 
 		<div class="join mb-4">
-			<button class="btn join-item md:hidden" onclick={toggleAllStudents}>
-				{allStudentsSelected ? 'Unselect All' : 'Select All'}
+			<button class="btn join-item md:hidden" onclick={toggleAllTeachers}>
+				{allTeachersSelected ? 'Unselect All' : 'Select All'}
 			</button>
 			<form
 				class="join-item"
@@ -113,13 +105,13 @@
 					};
 				}}
 			>
-				{#each [...selectedStudents] as student}
-					<input type="text" name="studentId" value={student} hidden />
+				{#each [...selectedTeachers] as teacher}
+					<input type="text" name="teacherId" value={teacher} hidden />
 				{/each}
 				<div class="indicator">
-					<span class="indicator-item badge badge-neutral">{selectedStudents.size}</span>
-					<button class="btn" type="submit" disabled={selectedStudents.size === 0}>
-						Delete Selected Students
+					<span class="indicator-item badge badge-neutral">{selectedTeachers.size}</span>
+					<button class="btn" type="submit" disabled={selectedTeachers.size === 0}>
+						Delete Selected Teachers
 					</button>
 				</div>
 			</form>
@@ -131,56 +123,44 @@
 				<tr>
 					<th class="w-10">
 						<input
-							title="Select All Students"
+							title="Select All Teachers"
 							type="checkbox"
 							class="checkbox"
-							checked={selectedStudents.size === data.students.length}
-							onchange={toggleAllStudents}
+							checked={selectedTeachers.size === data.teachers.length}
+							onchange={toggleAllTeachers}
 						/>
-						<span class="sr-only">Select All Students</span>
+						<span class="sr-only">Select All Teachers</span>
 					</th>
 					<th>Name</th>
-					<th>Homeroom</th>
 					<th>Classes</th>
 					<th class="text-right">Actions</th>
 				</tr>
 			</thead>
 			<tbody>
-				{#each data.students as student}
+				{#each data.teachers as teacher}
 					<tr>
 						<td>
 							<input
-								title="Select Student"
+								title="Select Teacher"
 								type="checkbox"
 								class="checkbox"
-								checked={selectedStudents.has(student.id)}
-								onchange={() => toggleStudent(student.id)}
+								checked={selectedTeachers.has(teacher.id)}
+								onchange={() => toggleTeacher(teacher.id)}
 							/>
-							<span class="sr-only">Select Student</span>
+							<span class="sr-only">Select Teacher</span>
 						</td>
-						<td>{student.name}</td>
-						<td>
-							<div class="badge badge-lg badge-neutral">
-								{#if student.homeroom}
-									<a href={`/homerooms/${student.homeroom.id}`} class="text-xs"
-										>{student.homeroom.name}</a
-									>
-								{:else}
-									<span class="text-xs">No homeroom</span>
-								{/if}
-							</div>
-						</td>
+						<td>{teacher.name}</td>
 						<td>
 							<div class="flex flex-wrap gap-1">
-								{#each student.classes as classItem}
+								{#each teacher.classes as classItem}
 									<span class="badge badge-primary">{classItem.name}</span>
 								{/each}
 							</div>
 						</td>
 						<td class="text-right">
 							<a
-								href={`/students/${student.id}`}
-								title="View Student Details"
+								href={`/teachers/${teacher.id}`}
+								title="View Teacher Details"
 								class="btn btn-square hover:btn-primary focus:hover:btn-primary active:btn-primary focus-within:btn-primary"
 							>
 								<svg
@@ -197,7 +177,7 @@
 										d="m12.75 15 3-3m0 0-3-3m3 3h-7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
 									/>
 								</svg>
-								<span class="sr-only">View student details</span>
+								<span class="sr-only">View teacher details</span>
 							</a>
 						</td>
 					</tr>
@@ -207,54 +187,55 @@
 	</div>
 	<div class="md:hidden">
 		<div class="join mb-4">
-			<button class="btn join-item" onclick={toggleAllStudents}>
-				{allStudentsSelected ? 'Unselect All' : 'Select All'}
+			<button class="btn join-item" onclick={toggleAllTeachers}>
+				{allTeachersSelected ? 'Unselect All' : 'Select All'}
 			</button>
-			<form class="join-item" method="post" action="?/delete">
-				{#each [...selectedStudents] as student}
-					<input type="text" name="studentId" value={student} hidden />
+			<form
+				class="join-item"
+				method="post"
+				action="?/delete"
+				use:enhance={() => {
+					return async ({ result }) => {
+						if (result.type === 'success') {
+							await invalidateAll();
+						}
+					};
+				}}
+			>
+				{#each [...selectedTeachers] as teacher}
+					<input type="text" name="teacherId" value={teacher} hidden />
 				{/each}
 				<div class="indicator">
-					<span class="indicator-item badge badge-neutral">{selectedStudents.size}</span>
-					<button class="btn" type="submit" disabled={selectedStudents.size === 0}>
+					<span class="indicator-item badge badge-neutral">{selectedTeachers.size}</span>
+					<button class="btn" type="submit" disabled={selectedTeachers.size === 0}>
 						Delete Selected
 					</button>
 				</div>
 			</form>
 		</div>
 		<ul class="list">
-			{#each data.students as student}
+			{#each data.teachers as teacher}
 				<li class="list-row rounded-box flex w-full items-center gap-2 tracking-wide shadow">
 					<div class="flex w-full grow justify-between gap-2">
 						<div class="flex items-center gap-2">
 							<div>
 								<input
-									title="Select Student"
+									title="Select Teacher"
 									type="checkbox"
 									class="checkbox"
-									checked={selectedStudents.has(student.id)}
-									onchange={() => toggleStudent(student.id)}
+									checked={selectedTeachers.has(teacher.id)}
+									onchange={() => toggleTeacher(teacher.id)}
 								/>
-								<span class="sr-only">Select Student</span>
+								<span class="sr-only">Select Teacher</span>
 							</div>
 							<div>
-								<p class="font-semibold">{student.name}</p>
+								<p class="font-semibold">{teacher.name}</p>
 								<div class="mt-2">
 									<dl>
-										<dt class="font-semibold uppercase">Homeroom</dt>
-										<dd>
-											<div class="badge badge-lg badge-neutral">
-												{#if student.homeroom}
-													<span class="text-xs">{student.homeroom.name}</span>
-												{:else}
-													<span class="text-xs">No homeroom</span>
-												{/if}
-											</div>
-										</dd>
 										<dt class="font-semibold uppercase">Classes</dt>
 										<dd>
 											<div class="flex flex-wrap gap-1">
-												{#each student.classes as classItem}
+												{#each teacher.classes as classItem}
 													<span class="badge badge-primary">{classItem.name}</span>
 												{/each}
 											</div>
@@ -265,8 +246,8 @@
 						</div>
 					</div>
 					<a
-						href={`/students/${student.id}`}
-						title="View Student Details"
+						href={`/teachers/${teacher.id}`}
+						title="View Teacher Details"
 						class="btn btn-square hover:btn-primary focus:hover:btn-primary active:btn-primary focus-within:btn-primary"
 					>
 						<svg
@@ -283,7 +264,7 @@
 								d="m12.75 15 3-3m0 0-3-3m3 3h-7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
 							/>
 						</svg>
-						<span class="sr-only">View student details</span>
+						<span class="sr-only">View teacher details</span>
 					</a>
 				</li>
 			{/each}

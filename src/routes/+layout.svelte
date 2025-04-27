@@ -47,7 +47,7 @@
 							class="dropdown-content menu bg-base-100 rounded-box border-base-200 flex w-40 flex-col gap-1 border shadow-md"
 						>
 							<li>
-								<a href="/assignments">Assibnments</a>
+								<a href="/assignments">Assignments</a>
 							</li>
 							<li>
 								<a href="/teachers">Teachers</a>

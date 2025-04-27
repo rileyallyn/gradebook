@@ -3,12 +3,11 @@ import { fail } from "@sveltejs/kit";
 import type { Actions } from "./$types";
 
 export const load = async () => {
-    const { students } = await api.getStudents();
-    const { homerooms } = await api.getHomerooms();
-    return { students, homerooms };
+    const { teachers } = await api.getTeachers();
+    return { teachers };
 };
 
-function validateStudent(data: FormData) {
+function validateTeacher(data: FormData) {
     const name = data.get('name') as string;
     if (!name) {
         throw fail(400, {
@@ -17,15 +16,24 @@ function validateStudent(data: FormData) {
     }
 
     const homeroom = data.get('homeroom') as string;
+
     if (!homeroom) {
         throw fail(400, {
             homeroom: 'Homeroom is required'
         })
     }
 
+    const classes = data.getAll('classes') as string[];
+    if (!classes) {
+        throw fail(400, {
+            classes: 'Classes are required'
+        })
+    }
+
     return {
         name,
-        homeroom
+        homeroom,
+        classes
     }
 }
 
@@ -33,13 +41,14 @@ export const actions: Actions = {
     add: async ({ request }) => {
         const data = await request.formData();
         // should be guaranteed to get a value from the form
-        const { name, homeroom } = validateStudent(data);
+        const { name, classes, homeroom } = validateTeacher(data);
 
         try {
-            await api.addStudent({
+            await api.addTeacher({
                 name: name as string
             }, {
-                homeroom: homeroom as string
+                classes: classes as string[],
+                homerooms: [homeroom]
             });
         } catch (error) {
             console.error(error);
@@ -54,10 +63,10 @@ export const actions: Actions = {
     },
     delete: async ({ request }) => {
         const data = await request.formData();
-        const studentIds = data.getAll('studentId') as string[];
+        const teacherIds = data.getAll('teacherId') as string[];
 
         try {
-            await api.deleteStudents(studentIds);
+            await api.deleteTeachers(teacherIds);
         } catch (error) {
             console.error(error);
             return fail(500, {
