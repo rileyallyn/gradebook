@@ -83,6 +83,11 @@ export const api = {
 	getStudents: async () =>
 		await db.query({
 			students: {
+				$: {
+					where: {
+
+					}
+				},
 				homeroom: {},
 				classes: {
 					assignments: {
@@ -91,6 +96,14 @@ export const api = {
 				},
 				assignments: {
 					grades: {}
+				}
+			}
+		}),
+	getStudentsByAssignment: async (assignmentId: string) =>
+		await db.query({
+			students: {
+				assignments: {
+					$: { where: { id: assignmentId } }
 				}
 			}
 		}),
