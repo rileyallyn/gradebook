@@ -68,3 +68,8 @@
 		</div>
 	</section>
 </div>
+
+<p>
+	{JSON.stringify(data.assignment)}
+	{JSON.stringify(data.assignment.grades)}
+</p>

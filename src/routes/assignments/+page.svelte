@@ -70,6 +70,7 @@
 					method="post"
 					action="?/add"
 					use:enhance={() => {
+						isAddingAssignment = false;
 						return async ({ result }) => {
 							if (result.type === 'success') {
 								await invalidateAll();
