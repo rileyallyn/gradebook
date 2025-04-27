@@ -23,6 +23,40 @@
 			</span>
 		{/if}
 	</header>
+	<section id="info" class="flex flex-col gap-2 rounded-md p-4">
+		<div class="card bg-base-100 shadow-xl">
+			<div class="card-body">
+				<h2 class="card-title">Info</h2>
+				<div class="flex flex-col gap-2">
+					<!-- homeroom + homeroom teachers -->
+					<div class="flex flex-row gap-2">
+						<div class="flex flex-col gap-1">
+							<label for="homeroom">Homeroom</label>
+							<input
+								type="text"
+								id="homeroom"
+								class="input input-bordered"
+								disabled
+								value={data.student.homeroom?.name}
+							/>
+						</div>
+					</div>
+					<div class="flex flex-row gap-2">
+						<div class="flex flex-col gap-1">
+							<label for="homeroom-teachers">Homeroom Teachers</label>
+							{#if data.student.homeroom?.teachers}
+								{#each data.student.homeroom?.teachers as teacher}
+									<a href={`/teachers/${teacher.id}`} class="badge badge-accent">{teacher.name}</a>
+								{/each}
+							{:else}
+								<p>No teachers assigned</p>
+							{/if}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
 	<section id="classes" class="flex flex-col gap-2 rounded-md p-4">
 		<div class="card bg-base-100 shadow-xl">
 			<div class="card-body">
