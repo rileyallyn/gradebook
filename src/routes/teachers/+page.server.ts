@@ -4,7 +4,9 @@ import type { Actions } from "./$types";
 
 export const load = async () => {
     const { teachers } = await api.getTeachers();
-    return { teachers };
+    const { classes } = await api.getClasses();
+    const { homerooms } = await api.getHomerooms();
+    return { teachers, classes, homerooms };
 };
 
 function validateTeacher(data: FormData) {
@@ -47,7 +49,7 @@ export const actions: Actions = {
             await api.addTeacher({
                 name: name as string
             }, {
-                classes: classes as string[],
+                classes: classes,
                 homerooms: [homeroom]
             });
         } catch (error) {

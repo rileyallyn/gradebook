@@ -83,6 +83,22 @@
 							<div>Name<span class="text-error">*</span></div>
 							<input type="text" name="name" placeholder="Name" class="input rounded-lg" required />
 						</label>
+						<label class="flex flex-col gap-2">
+							<div>Classes<span class="text-error">*</span></div>
+							<select name="classes" class="select" required>
+								{#each data.classes as classItem}
+									<option value={classItem.id}>{classItem.name}</option>
+								{/each}
+							</select>
+						</label>
+						<label class="flex flex-col gap-2">
+							<div>Homeroom<span class="text-error">*</span></div>
+							<select name="homeroom" class="select" required>
+								{#each data.homerooms as homeroom}
+									<option value={homeroom.id}>{homeroom.name}</option>
+								{/each}
+							</select>
+						</label>
 					</div>
 					<button type="submit" class="btn btn-primary mt-2">Add</button>
 				</form>
